@@ -385,7 +385,7 @@ public class DefectPixelInterpolation {
 		
 		//TODO
 		Grid2D spectralFiltered = new Grid2D(image.getWidth()*2,image.getHeight()*2);	/// w/o *2 ?
-		spectralFiltered = dpi.interpolateSpectral(image,mask,maxIter,zeroPadding);
+		spectralFiltered = dpi.interpolateSpectral(defectImage,mask,maxIter,zeroPadding);
 		spectralFiltered.show("Spectral Filtered Image");
 		
 		//show difference image |Spectral - Original|
