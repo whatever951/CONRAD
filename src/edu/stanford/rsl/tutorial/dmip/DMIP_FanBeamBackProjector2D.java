@@ -61,9 +61,10 @@ public class DMIP_FanBeamBackProjector2D {
 		this.detectorLength = detectorSpacing*detectorPixels;
 		
 		
-		double halfFanAngle = 0;//TODO
+		double halfFanAngle = Math.atan((detectorLength/2.0f)/focalLength);//TODO
 		System.out.println("Half fan angle: " + halfFanAngle*180.0/Math.PI);
 		//TODO
+		this.maxBeta = maxRot + 2.0*halfFanAngle;
 		this.betaIncrement = maxBeta /(double) numProjs;
 		System.out.println("Short-scan range: " + maxBeta*180/Math.PI);
 	}
@@ -88,8 +89,9 @@ public class DMIP_FanBeamBackProjector2D {
 			float sinBeta = (float) Math.sin(beta);
 			
 			//Compute direction and normal of the detector at the current rotation angle
-			final PointND detBorder = new PointND();//TODO
-			final SimpleVector dirDet = new SimpleVector();//TODO
+			final PointND detBorder = new PointND(-detectorLength/2.f*sinBeta, detectorLength/2.f*cosBeta, 0.d);//TODO
+			///final SimpleVector dirDet = new SimpleVector();//TODO
+			final SimpleVector dirDet = detBorder.getAbstractVector().multipliedBy(-1);//TODO
 			final StraightLine detLine = new StraightLine(detBorder, dirDet);
 			
 			//Compute rotated source point
@@ -102,17 +104,18 @@ public class DMIP_FanBeamBackProjector2D {
 			for(int x = 0; x < recoSize[0]; x++)
 			{
 				//transform the image pixel coordinates to world coordinates
-				float wx =0; //TODO
+				float wx = (float) ((x - recoSize[0]/2.0f+0.5f)*spacing[0]); //TODO
 				
 				for(int y = 0; y < recoSize[1]; y++)
 				{
-					float wy = 0;//TODO
+					float wy = (float) ((y - recoSize[1]/2.0f+0.5f)*spacing[1]); //TODO
 					
 					final PointND reconstructionPointWorld = new PointND(wx, wy, 0.d);
 
 					//intersect the projection ray with the detector
 					//TODO
-					final PointND detPixel = new PointND();//TODO
+					final StraightLine projectionLine = new StraightLine(source, reconstructionPointWorld);
+					final PointND detPixel = projectionLine.intersect(detLine);//TODO
 					
 					float valueTemp;
 					
@@ -137,8 +140,9 @@ public class DMIP_FanBeamBackProjector2D {
 						//Apply distance weighting
 						//see Fig 1a) exercise sheet
 						//TODO
-						//TODO
-						float dWeight = 0;//TODO
+						float radius = (float) (reconstructionPointWorld.getAbstractVector().normL2());
+						float phi = (float) ((Math.PI/2)+Math.atan2(reconstructionPointWorld.get(1), reconstructionPointWorld.get(0)));
+						float dWeight = (float) ((focalLength+radius*Math.sin(beta-phi))/focalLength);//TODO
 						valueTemp = (float) (value / (dWeight*dWeight));
 					}
 					else
