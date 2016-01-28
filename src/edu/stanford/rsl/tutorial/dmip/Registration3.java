@@ -70,7 +70,7 @@ public class Registration3 {
 			SimpleMatrix r = new SimpleMatrix(2,2);
 			double phi2 = x[0] * (2*Math.PI)/360;
 			r.setElementValue(0, 0, Math.cos(phi2));
-			r.setElementValue(0, 1, - Math.sin(phi2));
+			r.setElementValue(0, 1, -Math.sin(phi2));
 			r.setElementValue(1, 0, Math.sin(phi2));
 			r.setElementValue(1, 1, Math.cos(phi2));
 
@@ -126,7 +126,8 @@ public class Registration3 {
 		{
 			for(int j = 0; j < ref.getHeight(); j++)
 			{
-				// TODO: calculate SSD
+				// Todo: calculate SSD
+				sum += Math.pow((ref.getAtIndex(i, j) - imageMoving.getAtIndex(i, j)),2);
 			}
 		}
 
@@ -193,17 +194,17 @@ public class Registration3 {
 		// Define Rotation and translation
 		SimpleMatrix r = new SimpleMatrix(2,2);
 		
-		// TODO: set phi
-		double phi = 0;
+		// Todo: set phi
+		double phi = 45 * (Math.PI/180);
 		
-		// TODO: fill the rotation matrix
-		// TODO
-		// TODO
-		// TODO
-		// TODO
+		// Todo: fill the rotation matrix
+		r.setElementValue(0, 0, Math.cos(phi));
+		r.setElementValue(0, 1, -Math.sin(phi));
+		r.setElementValue(1, 0, Math.sin(phi));
+		r.setElementValue(1, 1, Math.cos(phi));
 
-		// TODO: define translation
-		SimpleVector t = new SimpleVector(0,0);
+		// Todo: define translation
+		SimpleVector t = new SimpleVector(20,1);
 
 		// Initialize transformed phantom
 		Grid2D transformedPhantom = new Grid2D(phantom);
